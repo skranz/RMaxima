@@ -8,3 +8,6 @@
   Locate positions of maxima variables in
 }
 
+\examples{\dontrun{
+  locate.maxima.var("diff([x^2-y],[x])")  
+}}

@@ -8,3 +8,6 @@
   Extract all custom variables in a maxima expression
 }
 
+\examples{\dontrun{
+  extract.maxima.var("diff([x^2-y],[x])")
+}}

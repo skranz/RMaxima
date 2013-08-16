@@ -5,9 +5,14 @@ Version: 0.01
 Date: 2013-08-15
 Author: Sebastian Kranz
 Maintainer: Sebastian Kranz <sebastian.kranz@uni-ulm.com>
-Description: An interface between R and Maxima. Only tested on Windows. Maxima must be installed separately.
+Description: An interface between R and Maxima. Only tested on Windows. Maxima
+    must be installed separately.
 License: GPL (>= 2)
 Depends:
     stringtools,
     stringr,
     restorepoint
+Collate:
+    'RMaximaConnection.R'
+    'RMaximaMathConvert.R'
+    'RMaximaUtils.R'

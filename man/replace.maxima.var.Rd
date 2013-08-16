@@ -8,3 +8,6 @@
   Replace a maxima variables in org by new
 }
 
+\examples{\dontrun{
+  replace.maxima.var("diff([x^2-y],[x])",c("x","y"),c("alpha","beta"))  
+}}

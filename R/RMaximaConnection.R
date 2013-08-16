@@ -5,10 +5,10 @@
 #library(skUtils)
 
 
-maxima.connection = function(out.path=NULL,maxima.path=NULL,use.pipe=TRUE,use.last=TRUE, use.log.file=TRUE)
+start.maxima = function(out.path=tempdir(),maxima.path=NULL,use.pipe=TRUE,use.last=TRUE, use.log.file=TRUE)
 {
-  restore.point("maxima.connection")
-  #rerestore.point("maxima.connection")
+  restore.point("start.maxima")
+  #rerestore.point("start.maxima")
   
   #mx.closeConnection()
   mx = mx.default(out.path=out.path, maxima.path=maxima.path, use.pipe=use.pipe, use.log.file=use.log.file)
@@ -46,6 +46,9 @@ open.maxima.pipe = function(mx,reopen=TRUE,verbose=!TRUE) {
     header = ""
   }
   if (mx$use.log.file) {
+    if (!file.exists(mx$logfile))
+      file.create(mx$logfile)
+    
     header = c(header,
       'display2d : false;',
       #'set_tex_environment_default ("?#S#", "?");',         
@@ -89,21 +92,25 @@ get.mx = function() {
   if (exists("MAXIMA_MX")) {
     mx=MAXIMA_MX
   } else {
-    mx = maxima.connection()
+    mx = start.maxima()
     MAXIMA_MX <<- mx
   }
   mx  
 }
 
-mx.default = function(maxima.path = NULL,  maxima.exec = NULL,  out.path = NULL, logfile = NULL,  outfile = NULL, orgscriptfile=NULL, scriptfile = NULL,  header.path = NULL,  maxima.header = NULL,  use.pipe = TRUE, use.log.file=TRUE
+mx.default = function(maxima.path = NULL,  maxima.exec = NULL,  out.path=tempdir(), logfile = NULL,  outfile = NULL, orgscriptfile=NULL, scriptfile = NULL,  header.path = NULL,  maxima.header = NULL,  use.pipe = TRUE, use.log.file=TRUE
 ) {
   restore.point("mx.default")
   #rerestore.point("mx.default")
   mx = nlist(maxima.path,  maxima.exec,  out.path, logfile,  outfile ,  scriptfile,  header.path ,  maxima.header,  use.pipe, use.log.file)
 
   mx = copy.into.list(dest=mx, overwrite=FALSE, source=list(
-         maxima.path="", out.path=getwd(),
+         maxima.path="", 
          header.path=path.package("Rmaxima",quiet=TRUE)))
+
+  # Only / works in Maxima path
+  mx$out.path = gsub("\\","/",mx$out.path,fixed=TRUE)
+  
   mx = copy.into.list(dest=mx, overwrite=FALSE, source=list(
     maxima.exec = get.maxima.exec(mx$maxima.path),
     logfile = paste(mx$out.path,"/maxima.log",sep=""),
@@ -394,9 +401,9 @@ example.runmx = function() {
   runmx("solve([y=2*x,x=y^2],[x,y])",show=TRUE)
   
 
-  #mx = maxima.connection(out.path="D:/libraries/Rmaxima",use.pipe=TRUE)
+  #mx = start.maxima(out.path="D:/libraries/Rmaxima",use.pipe=TRUE)
   runmx("solve([y=2*x,x=y^2],[x,y])")
-  #mx = maxima.connection(out.path="D:/libraries/Rmaxima",use.pipe=TRUE)
+  #mx = start.maxima(out.path="D:/libraries/Rmaxima",use.pipe=TRUE)
   
   runmx("x : y;
         diff([2*x,x^2],x);")
@@ -410,7 +417,7 @@ example.runmx = function() {
 {
   library(restoreDebug)
   print("Establishing maxima connection...",quote=FALSE)
-  maxima.connection()
+  start.maxima()
   # next statement has no effect except on Windows XP Pro
 }
 
@@ -472,7 +479,7 @@ example.runmx = function() {
 # {
 #   library(restoreDebug)
 #   print("Establishing maxima connection...",quote=FALSE)
-#   maxima.connection()
+#   start.maxima()
 #   # next statement has no effect except on Windows XP Pro
 # }
 # 

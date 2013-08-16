@@ -1,9 +1,3 @@
-#' Interface between R and Maxima
-#' Commands to establish connection to Maxima
-
-#library(restoreDebug)
-#library(skUtils)
-
 #' Just a short cut
 cc = function(...) {
   paste0(...)
