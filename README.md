@@ -27,7 +27,7 @@ install_github(repo = "RMaxima", username = "skranz")
 library(restorepoint)
 library(RMaxima)
 
-maxima.connection(out.path = getwd())
+start.maxima()
 mx.run("solve([x^2-y=0],x)", just.str = TRUE)
 
 f = "x^2+y^2+x^2*y^2"
