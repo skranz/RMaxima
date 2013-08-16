@@ -3,7 +3,7 @@ cc = function(...) {
   paste0(...)
 }
 
-
+#' Copy elements of an environment into a list
 copy.into.list = function(dest=NULL, source=sys.frame(sys.parent(1)), names = NULL,exclude=NULL,overwrite=TRUE) {
   if (is.null(dest)) {
     if (is.list(source)) {
@@ -41,6 +41,7 @@ copy.into.list = function(dest=NULL, source=sys.frame(sys.parent(1)), names = NU
 merge.lines = function(txt, collapse = "\n") {
   paste(txt,collapse=collapse)
 }
+
 #' transforms "A\nB" into c("A","B") 
 sep.lines = function(txt, collapse = "\n") {
   library(stringr)
@@ -64,8 +65,13 @@ named.list = function(...) {
   }
   li
 }
-nlist = named.list
-# Display stuff in a convenient form
+
+#' Shortcut for named list
+nlist = function(...) {
+  named.list
+}
+
+#' Display stuff in a convenient form
 display = function(...,collapse="\n",sep="",new.line=TRUE) {
   if (new.line) {
     str = paste("\n",paste(...,collapse=collapse,sep=sep),"\n",sep="")
@@ -85,11 +91,7 @@ split.var.ind = function(var) {
   cbind(left,ind)
 }
 
-mywarning = function(txt) {
-	warning(txt)
-	svalue(text.term) = paste(txt,"\n",svalue(text.term))
-}	
-
+#' warpper to readLines, merge results to a single string
 read.text = function(fn,merge.lines=FALSE,warn=FALSE) {
 	con <- file(fn, "r")
 	txt = readLines(con,warn=warn) # empty
@@ -100,6 +102,8 @@ read.text = function(fn,merge.lines=FALSE,warn=FALSE) {
 	return(txt)
 }
 
+
+#' wrapper to writeLines opens and closes connection
 write.text = function(text,fn,...) {
 	con <- file(fn, "w",...)
 	writeLines(text, con = con, sep = "\n", useBytes = FALSE)
@@ -107,11 +111,8 @@ write.text = function(text,fn,...) {
 }
 
 
-MAXIMA.KEYWORDS <<- c(
-"sum","diff","integrate"  
-)
 
-#' Extract all custom variables in a maxima expression
+#' Extract names of all variables from a maxima expression
 extract.maxima.var = function(str) {
   restore.point("extract.maxima.var")
   #rerestore.point("extract.maxima.var")
@@ -120,7 +121,7 @@ extract.maxima.var = function(str) {
   var = str_extract_all(str,'[a-zA-Z]+[0-9a-zA-Z_]*')
   fun = function(v) {
     v = unique(v)
-    setdiff(v,MAXIMA.KEYWORDS)
+    setdiff(v,.RMAXIMA.ENV$MAXIMA.KEYWORDS)
   }
   var = lapply(var,fun)
   return(var)
@@ -131,7 +132,7 @@ examples.extract.maxima.var = function() {
   extract.maxima.var("diff([x^2-y],[x])")
 }
 
-#' Locate positions of maxima variables in 
+#' Locate positions (a stringtools pos) of all variables in a maxima expression string 
 locate.maxima.var = function(str, var = extract.maxima.var(str)) {
   restore.point("locate.maxima.var")
   #rerestore.point("locate.maxima.var")
@@ -157,7 +158,7 @@ examples.locate.maxima.var = function() {
   locate.maxima.var("diff([x^2-y],[x])")  
 }
 
-#' Replace a maxima variables in org by new
+#' Replace in a maxima expression string variables org by new
 replace.maxima.var = function(str, org, new)  {
   restore.point("replace.maxima.var")
   #rerestore.point("replace.maxima.var")

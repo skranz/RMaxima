@@ -1,11 +1,12 @@
 \name{replace.maxima.var}
 \alias{replace.maxima.var}
-\title{Replace a maxima variables in org by new}
+\title{Replace in a maxima expression string variables org by new}
 \usage{
   replace.maxima.var(str, org, new)
 }
 \description{
-  Replace a maxima variables in org by new
+  Replace in a maxima expression string variables org by
+  new
 }
 
 \examples{\dontrun{

@@ -1,18 +1,11 @@
-#' Interface between R and Maxima
-#' Calls Maxima from command line or opens a pipe
-#' So far only tested under Windows
 
-
-#library(restoreDebug)
-#library(skUtils)
-
-
-
+#' Translate maxima code to R. VERY preliminary
 maxima.to.r = function(str) {
   str = gsub("'diff","diff",str,fixed=TRUE)
   str  
 }
 
+#' Maxima matrix to an R matrix with the individual Maxima expressions
 mx.to.r.matrix = function(mx.mat) {
   library(stringtools)
   library(stringr)
@@ -31,12 +24,16 @@ mx.to.r.matrix = function(mx.mat) {
   return(mat)
 }
 
+#' An R matrix with individual Maxima strings to a Maxima matrix
 r.to.mx.matrix = function(mat) {
   str = apply(mat,1,function(row) cc("[",cc(row,collapse=","),"]"))
   str = cc("matrix(",cc(str,collapse=","),")")
   str
 }
-mx.matrix = r.to.mx.matrix
+
+#' A synonym for r.to.mx.matrix
+mx.matrix = function(...) {r.to.mx.matrix(...)}
+
 examples.r.to.mx.matrix = function() {
   mat = matrix(1:8,4,2)
   mat
@@ -47,7 +44,7 @@ examples.r.to.mx.matrix = function() {
   mx.to.r.matrix(mx.mat)
 }
 
-
+#' Convert an R vector to a maxima list
 mx.list = function(vec,brackets=TRUE) {
   if (is(vec,"cases"))
     return(mx.list(lapply(vec,mx.list)))
@@ -58,7 +55,7 @@ mx.list = function(vec,brackets=TRUE) {
   }
 }
 
-
+#' Compute symbolically determinant of a matrix
 mx.determinant = function(mat) {
   if (is.matrix(mat))
     mat = mx.matrix(mat)
@@ -66,7 +63,7 @@ mx.determinant = function(mat) {
   mx.run(cc("determinant(",mat,");"),just.str=TRUE)
 }
 
-# Computes the hessian of an expression
+#' Computes the hessian of a maxima expression
 mx.hessian = function(f,var,to.r = TRUE) {
   restore.point("mx.hessian")
   #rerestore.point("mx.hessian")
@@ -85,7 +82,7 @@ examples.mx.hessian = function() {
   mx.hessian(f=f,var=var)
 }
 
-# Computes the hessian of an expression
+#' Computes the jacobian of a maxima expression
 mx.jacobian = function(f,var,to.r = TRUE) {
   restore.point("mx.jacobian")
   #rerestore.point("mx.jacobian")
@@ -104,6 +101,7 @@ examples.mx.jacobian = function() {
   mx.jacobian(f=f,var=var)
 }
 
+#' Computes the bordered hessian matrix, used for concavity checks
 mx.bordered.hessian = function(f,var,to.r = TRUE, jacobian=NULL, hessian = NULL) {
   restore.point("mx.bordered.hessian")
   #rerestore.point("mx.bordered.hessian")
@@ -134,7 +132,7 @@ examples.mx.bordered.hessian = function() {
   mx.determinant(mat)
 }
 
-
+#' Get a symbolic condition for negative definiteness of a matrix
 mx.negative.definite.cond = function(mat,with.descr=FALSE) {
   # Compute determinanet of r'th leading principal minor
   # and multiply by (-1)^r
@@ -173,7 +171,9 @@ mx.concave.cond = function(f,var,with.descr=FALSE, hessian=NULL) {
     cond = cond))
 }
 
-#' Perform comparative statics 
+#' Perform comparative statics of a system of equations
+#' 
+#' Applies the implicit function theorem
 mx.comparative.statics = function(F=all.lhs(eq.sys),var,par,eq.sys=NULL,...) {
   F = mx.list(F)
   var = mx.list(var)
@@ -233,6 +233,10 @@ examples.mx.quasi.concave.cond = function(f,var) {
   
 }
 
+#' Returns sufficient conditions from a principal minor test
+#' that the function f is jointly concave in in all variables in var
+#' @param f a string that specifies the Maxima formula of the function body
+#' @param var a character vector specifying the variables
 mx.check.concavity = function(f,var,assume=NULL) {
   # Conditions for quasiconcavity
   
@@ -283,14 +287,17 @@ mx.check.concavity = function(f,var,assume=NULL) {
   ret
 }
 
+#' Tries to deduce the sign of a maxima expression
 mx.sign = function(expr,assume=NULL,declare=NULL,just.str=TRUE) {
   mx.run(cc("sign(",expr,");"),assume=assume,declare=declare,just.str=just.str)
 }
 
+#' Takes a system of equations L=R and gets L-R 
 get.all.lhs = function(eq) {
   return(paste(lhs(eq)," - (", rhs(eq),")"))
 }
 
+#' Separates from a vector of (in-)equalities the lhs, comparison operator and rhs
 lhs.dir.rhs  = function(str) {
   pos1 = str_locate(str, "<")
   pos2 = str_locate(str,">")
@@ -307,16 +314,19 @@ examples.lhs.dir.rhs = function(str) {
   lhs.dir.rhs(str<-c("x+5>=y","a+4", "4=3"))
 }
 
-
+#' Extracts the lhs from a maxima equation
 lhs = function(str) {
   pos=str_locate(str,fixed("="))[,1]
   substring(str,1,pos-1)  
 }
 
+
+#' Extracts the rhs from a maxima equation
 rhs = function(str) {
   pos=str_locate(str,fixed("="))[,1]
   substring(str,pos+1)  
 }
+
 
 mx.adapt.declare = function(declare) {
   if (is.null(declare)) {
@@ -403,6 +413,9 @@ examples.mx.solve = function() {
   mx.solve(eq,var)
 }
 
+#' Simplifies an expression
+#' 
+#' By default uses gcfac from the Maxima library scifac
 mx.simplify = function(str, simplify.code = c("gcfac(factor(...));"[1]), just.code = FALSE,declare=NULL,assume=NULL) {
 
   code = str_replace(simplify.code,fixed("(...)"),paste("(",str,")"))
@@ -420,6 +433,7 @@ mx.simplify = function(str, simplify.code = c("gcfac(factor(...));"[1]), just.co
   }
 }
 
+#' Differentiate an expression
 mx.diff = function(expr,var,times=1, just.code = FALSE,declare=NULL,assume=NULL,just.str=TRUE) {
   restore.point("mx.diff")
   #rerestore.point("mx.diff")
@@ -536,6 +550,5 @@ examples.gams.mcp = function() {
   profit  
   mx.gams.mcp(profit,c("q[i]"),"profit")
     
-  
 }
 

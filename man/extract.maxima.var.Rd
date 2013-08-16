@@ -1,11 +1,11 @@
 \name{extract.maxima.var}
 \alias{extract.maxima.var}
-\title{Extract all custom variables in a maxima expression}
+\title{Extract names of all variables from a maxima expression}
 \usage{
   extract.maxima.var(str)
 }
 \description{
-  Extract all custom variables in a maxima expression
+  Extract names of all variables from a maxima expression
 }
 
 \examples{\dontrun{

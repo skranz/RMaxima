@@ -1,11 +1,12 @@
 \name{locate.maxima.var}
 \alias{locate.maxima.var}
-\title{Locate positions of maxima variables in}
+\title{Locate positions (a stringtools pos) of all variables in a maxima expression string}
 \usage{
   locate.maxima.var(str, var = extract.maxima.var(str))
 }
 \description{
-  Locate positions of maxima variables in
+  Locate positions (a stringtools pos) of all variables in
+  a maxima expression string
 }
 
 \examples{\dontrun{

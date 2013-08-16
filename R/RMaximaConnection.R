@@ -4,6 +4,7 @@
 #library(restoreDebug)
 #library(skUtils)
 
+.RMAXIMA.ENV = new.env(parent=.GlobalEnv)
 
 start.maxima = function(out.path=tempdir(),maxima.path=NULL,use.pipe=TRUE,use.last=TRUE, use.log.file=TRUE)
 {
@@ -13,6 +14,11 @@ start.maxima = function(out.path=tempdir(),maxima.path=NULL,use.pipe=TRUE,use.la
   #mx.closeConnection()
   mx = mx.default(out.path=out.path, maxima.path=maxima.path, use.pipe=use.pipe, use.log.file=use.log.file)
 
+  .RMAXIMA.ENV$MAXIMA.KEYWORDS <- c(
+    "sum","diff","integrate"  
+  )
+  
+  
   try(mx <- open.maxima.pipe(mx,reopen=TRUE))
   MAXIMA_MX <<- mx
   invisible(mx)

@@ -12,7 +12,4 @@ Depends:
     stringtools,
     stringr,
     restorepoint
-Collate:
-    'RMaximaConnection.R'
-    'RMaximaMathConvert.R'
-    'RMaximaUtils.R'
+
