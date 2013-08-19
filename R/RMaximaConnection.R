@@ -1,8 +1,10 @@
 #' Interface between R and Maxima
 #' Commands to establish connection to Maxima
 
-#library(restoreDebug)
-#library(skUtils)
+.onLoad = function(...)  {
+  # If loaded as library overwrite restore.point to an empty function
+  assign("restore.point", function(...){}, envir=parent.env(environment()))
+}
 
 .RMAXIMA.ENV = new.env(parent=.GlobalEnv)
 
@@ -274,7 +276,6 @@ add.maxima.printf = function(txt) {
 
 #' Does not yet handle nested lists efficiently
 mx.result.list = function(str) {
-  library(stringr)
   restore.point("mx.result.list")
   #rerestore.point("mx.result.list")
   str = str_replace_all(str,fixed(" "),"")
@@ -312,8 +313,6 @@ mx.read = function(n=-1L,mx=get.mx()) {
 
 # Separate different input and output fields in a str
 mx.sep.fields = function(txt) {
-  
-  library(stringr)
   tag = substr(txt,1,3)
   
   start.in  = which(tag == "(%i") #)  
@@ -418,14 +417,6 @@ example.runmx = function() {
   runmx("diff([2*x,x^2],x)")
 }
 
-.First.lib <- function(lib) 
-{
-  library(restoreDebug)
-  print("Establishing maxima connection...",quote=FALSE)
-  start.maxima()
-  # next statement has no effect except on Windows XP Pro
-}
-
 
 # maximaStart <- function(mx=get.mx(),verbose = FALSE, method = c("socket", "system"), port = c(9736,9735,9734)[1])
 # {
@@ -480,13 +471,6 @@ example.runmx = function() {
 #   # next statement has no effect except on Windows XP Pro
 # }
 # 
-# .First.lib <- function(lib) 
-# {
-#   library(restoreDebug)
-#   print("Establishing maxima connection...",quote=FALSE)
-#   start.maxima()
-#   # next statement has no effect except on Windows XP Pro
-# }
 # 
 # # proper counting of lines read in, and proper handling of them.
 # 

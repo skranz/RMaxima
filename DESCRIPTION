@@ -10,6 +10,5 @@ Description: An interface between R and Maxima. Only tested on Windows. Maxima
 License: GPL (>= 2)
 Depends:
     stringtools,
-    stringr,
-    restorepoint
+    stringr
 

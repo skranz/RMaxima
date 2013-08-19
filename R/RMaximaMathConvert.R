@@ -9,8 +9,17 @@ mx.is.equal = function(lhs=NULL,rhs=NULL,eq=NULL) {
     rhs = rhs(eq)
   
   all.lhs = paste0(lhs," - (", rhs,")")
-  all.lhs = mx.simplify(all.lhs)$str
-  com = paste('is(',all.lhs,'=0);',sep="")
+
+  simp = mx.run(paste0("ratsimp(",all.lhs,")"))$str
+  if (simp=="0")
+    return("true")
+  simp = mx.run(paste0("ratsimp(expand(",all.lhs,"))"))$str
+  if (simp=="0")
+    return("true")
+  simp = mx.simplify(paste0("ratsimp(expand(",all.lhs,"))"))$str
+  if (simp=="0")
+    return("true")
+  com = paste('is(equal(',simp,',0));',sep="")
   mx.run(com,just.str=TRUE)
 }
 
@@ -30,8 +39,6 @@ maxima.to.r = function(str) {
 
 #' Maxima matrix to an R matrix with the individual Maxima expressions
 mx.to.r.matrix = function(mx.mat) {
-  library(stringtools)
-  library(stringr)
   start.pos = str.locate.first(mx.mat,"[")[,1]
   ret = str.locate.all(mx.mat,"]")[[1]]
   end.pos = ret[NROW(ret),1]

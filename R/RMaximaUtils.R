@@ -44,7 +44,6 @@ merge.lines = function(txt, collapse = "\n") {
 
 #' transforms "A\nB" into c("A","B") 
 sep.lines = function(txt, collapse = "\n") {
-  library(stringr)
   if (length(txt)>1)
     txt = merge.lines(txt,collapse)
   str_split(txt,fixed(collapse))[[1]]
@@ -112,7 +111,6 @@ extract.maxima.var = function(str) {
   restore.point("extract.maxima.var")
   #rerestore.point("extract.maxima.var")
 
-  library(stringr)
   var = str_extract_all(str,'[a-zA-Z]+[0-9a-zA-Z_]*')
   fun = function(v) {
     v = unique(v)
@@ -130,9 +128,6 @@ examples.extract.maxima.var = function() {
 #' Locate positions (a stringtools pos) of all variables in a maxima expression string 
 locate.maxima.var = function(str, var = extract.maxima.var(str)) {
   restore.point("locate.maxima.var")
-  #rerestore.point("locate.maxima.var")
-  
-  library(stringtools)
   
   stopifnot(length(str)==1)
   
@@ -157,8 +152,6 @@ examples.locate.maxima.var = function() {
 replace.maxima.var = function(str, org, new)  {
   restore.point("replace.maxima.var")
   #rerestore.point("replace.maxima.var")
-  
-  library(stringtools)
   
   stopifnot(length(str)==1)
   
