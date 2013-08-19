@@ -1,10 +1,11 @@
 \name{nlist}
 \alias{nlist}
-\title{Shortcut for named list}
+\title{Creates a list that is named by the names of its arguments}
 \usage{
   nlist(...)
 }
 \description{
-  Shortcut for named list
+  Creates a list that is named by the names of its
+  arguments
 }
 

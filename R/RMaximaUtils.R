@@ -52,7 +52,7 @@ sep.lines = function(txt, collapse = "\n") {
 
 
 #' Creates a list that is named by the names of its arguments
-named.list = function(...) {
+nlist = function(...) {
   li = list(...)
   li.names = names(li)
   
@@ -64,11 +64,6 @@ named.list = function(...) {
     names(li) = names
   }
   li
-}
-
-#' Shortcut for named list
-nlist = function(...) {
-  named.list
 }
 
 #' Display stuff in a convenient form

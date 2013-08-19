@@ -1,3 +1,26 @@
+#' Check whether to expressions ar equal
+#' @return a string "true","false" or "unknown"
+mx.is.equal = function(lhs=NULL,rhs=NULL,eq=NULL) {
+  restore.point("mx.is.equal")
+  mx.write("prederror : false;")
+  if (is.null(lhs))
+    lhs = lhs(eq)
+  if (is.null(rhs))
+    rhs = rhs(eq)
+  
+  all.lhs = paste0(lhs," - (", rhs,")")
+  all.lhs = mx.simplify(all.lhs)$str
+  com = paste('is(',all.lhs,'=0);',sep="")
+  mx.run(com,just.str=TRUE)
+}
+
+examples.mx.is.equal = function() {
+  eq = "x_1+x_1=x_1"
+  mx.is.equal(eq=eq)
+  eq = "x_1+x_1=2*x_1"
+  mx.is.equal(eq=eq)
+  
+} 
 
 #' Translate maxima code to R. VERY preliminary
 maxima.to.r = function(str) {

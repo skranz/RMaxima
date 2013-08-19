@@ -32,3 +32,14 @@ var = c("x","y")
 mx.hessian(f=f,var=var)
 ```
 
+## Exchange between Maxima and R
+
+Maxima code in R is stored as strings.
+
+The interchange between R and Maxima uses intermediate files. The function mx.run works roughly as follows:
+
+1. It first wrap the plain Maxima code (ma) into Maxima output code (mao). Mao code are maxima commands that evaluate the plain ma code and write the results in the file mx$outfile.
+2. The mao code is sent to maxima via call.maxima(..). Either via an established Maxima pipe (default) or by calling maxima once from command line. The pipe solution is preferable, since it is quicker, but may currently not work on all operating systems.
+3. The generated output is retrieved with read.maxima.out and returned.
+
+

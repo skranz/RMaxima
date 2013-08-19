@@ -6,7 +6,7 @@
 
 .RMAXIMA.ENV = new.env(parent=.GlobalEnv)
 
-start.maxima = function(out.path=tempdir(),maxima.path=NULL,use.pipe=TRUE,use.last=TRUE, use.log.file=TRUE)
+start.maxima = function(out.path=tempdir(),maxima.path=NULL,use.pipe=TRUE,use.last=TRUE, use.log.file=TRUE,...)
 {
   restore.point("start.maxima")
   #rerestore.point("start.maxima")
@@ -151,7 +151,6 @@ close.maxima.pipe = function() {
 
 call.maxima = function(txt,mx=get.mx(),out.file = mx$outfile, use.pipe = mx$use.pipe,logfile=mx$logfile,all.silent=FALSE,clear=TRUE,show=FALSE,answers="") {
 	restore.point("call.maxima.and.lyx")
-	#rerestore.point("call.maxima.and.lyx")	
 	
 	write.text("maxima error!",out.file)
   
