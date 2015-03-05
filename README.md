@@ -15,8 +15,9 @@ You can install the package from GitHub in the usual fashion.
 
 ```s
 library(devtools)
-install_github(repo = "restorepoint", username = "skranz")
-install_github(repo = "RMaxima", username = "skranz")
+install_github("skranz/restorepoint")
+install_github("skranz/stringtools")
+install_github("skranz/RMaxima")
 ```
 
 
