@@ -7,6 +7,10 @@ RMaxima
 
 RMaxima is an interface between R and the computer algebra system Maxima. In addition the package has some functions for mathematical operations.
 
+## Experimental, not robust and not well documented
+
+RMaxima is an experimental project that has not grown out an early stage. While it usually runs on my computer, errors often occur. Unfortunately, it is not well documented and currently, I don't actively work on it.
+
 ## Installation under Windows
 
 Sorry, so far the package is only tested under windows. You first must install Maxima separately. You should also add the /bin directory of Maxima to the Windows PATH variable.
